@@ -24,12 +24,14 @@ def conversion(amount, base_currency, target_currency, transaction_date):
         try:
             print("{0} for {1} DOES NOT EXIST".format(base_currency, transaction_date))
             url = (
-                "https://api.frankfurter.dev/v2/rates/?base="
+                "https://api.frankfurter.dev/v2/rates?base="
                 + base_currency.upper()
                 + "&date="
                 + transaction_date.strftime("%Y-%m-%d")
             )
             response = requests.get(url)
+
+            print(url)
 
             if response.status_code != 200:
                 print("API Returned Error:", response.status_code)
