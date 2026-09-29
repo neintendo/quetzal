@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styles from "../../styles/Table.module.css";
+import api from "../../api";
 
 const AccountsTable = ({
   onRowClick,
@@ -7,6 +8,23 @@ const AccountsTable = ({
   currencyFilter,
   accountsData,
 }) => {
+
+  const [profile, setProfile] = useState(null);
+
+  const getProfile = () => {
+    api
+      .get("profile/")
+      .then((res) => res.data)
+      .then((data) => {
+        setProfile(data);
+      })
+      .catch((err) => alert(err));
+  };
+
+  useEffect(() => {
+    getProfile();
+  }, []);
+
   const [sortHeader, setSortHeader] = useState({
     key: "name",
     direction: "asc",
@@ -25,7 +43,13 @@ const AccountsTable = ({
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
     const matchesCurrency = !currencyFilter || item.currency === currencyFilter;
-    return matchesSearch && matchesCurrency;
+
+    if (profile?.hide_accounts === true) {
+      const matchesVisibility = item.visible === false;
+      return matchesSearch && matchesCurrency && !matchesVisibility;
+    } else {
+      return matchesSearch && matchesCurrency;
+    }
   });
 
   const sortedData = [...filteredData].sort((a, b) => {
@@ -97,7 +121,7 @@ const AccountsTable = ({
             <tr
               className={styles.tr}
               onClick={() =>
-                onRowClick(val.id, val.name, val.type, val.currency)
+                onRowClick(val.id, val.name, val.type, val.currency, val.visible)
               }
               key={key}
             >

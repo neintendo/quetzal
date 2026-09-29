@@ -1,3 +1,4 @@
+from pyexpat import model
 from decimal import Decimal
 
 from django.contrib.auth.models import AbstractUser
@@ -198,6 +199,7 @@ class User(AbstractUser):
         choices=[("system", "System"), ("light", "Light"), ("dark", "Dark")],
         default="system",
     )
+    hide_accounts = models.BooleanField(default=True)
 
     def __str__(self):
         return self.username
@@ -211,6 +213,7 @@ class Account(models.Model):
         max_length=30, choices=ExchangeRates.CURRENCIES, default="USD"
     )
     balance = models.DecimalField(max_digits=15, decimal_places=2, default=0)
+    visible = models.BooleanField(default=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:

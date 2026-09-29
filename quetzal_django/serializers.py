@@ -8,8 +8,8 @@ from .models import Account, Category, Recurring, Transaction, User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["id", "username", "display_name", "main_currency", "theme"]
-        extra_kwargs = {"theme": {"required": False}}
+        fields = ["id", "username", "display_name", "main_currency", "theme", "hide_accounts"]
+        extra_kwargs = {"theme": {"required": False}, "hide_accounts": {"required": False}}
 
 
 # User Registration Serializer.

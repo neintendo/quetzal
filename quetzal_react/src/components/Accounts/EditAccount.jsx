@@ -10,12 +10,14 @@ function EditAccount({
   account,
   accountType,
   accountCurrency,
+  accountVisibility,
   onAccountDelete,
   accountsData,
 }) {
   const [name, setName] = useState(account);
   const [type, setType] = useState(accountType);
   const [currency, setCurrency] = useState(accountCurrency);
+  const [visible, setVisibility] = useState(accountVisibility);
   const [method, setMethod] = useState("put");
   const [loading, setLoading] = useState(false);
   const [loadingB, setLoadingB] = useState(false);
@@ -55,7 +57,7 @@ function EditAccount({
       let requestData;
 
       if (method === "put") {
-        requestData = { name, type, currency };
+        requestData = { name, type, currency, visible};
       }
 
       const res = await api[method](route, requestData);
@@ -65,6 +67,7 @@ function EditAccount({
         setName(name);
         setType(type);
         setCurrency(currency);
+        setVisibility(visible)
       }
       if (res.status === 204) {
         alert("Account deleted successfully!");
@@ -153,6 +156,18 @@ function EditAccount({
               {sym} - {name}
             </option>
           ))}
+        </select>
+        <select
+          className={styles["edit-account-form-input"]}
+          type="text"
+          value={visible}
+          onChange={(e) => setVisibility(e.target.value) === "true"}
+          required
+        >
+          <option>- Visibility -</option>
+          <option value="true">Show</option>
+          <option value="false">Hidden</option>
+
         </select>
         <button
           className={styles["edit-account-form-button"]}

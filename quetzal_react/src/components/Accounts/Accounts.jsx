@@ -29,6 +29,7 @@ const Accounts = () => {
   const [selectedAccountName, setSelectedAccountName] = useState("");
   const [selectedAccountType, setSelectedAccountType] = useState("");
   const [selectedAccountCurrency, setSelectedAccountCurrency] = useState("");
+  const [selectedAccountVisibility, setSelectedAccountVisibility] = useState("");
   const [selectedTransactionNotes, setSelectedTransactionNotes] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
   const [showAccEditModal, setShowAccEditModal] = useState(false);
@@ -148,11 +149,13 @@ const Accounts = () => {
     accountNameFromChild,
     accountTypeFromChild,
     currencyFromChild,
+    visibilityFromChild
   ) => {
     setSelectedAccount(accountIdFromChild);
     setSelectedAccountName(accountNameFromChild);
     setSelectedAccountType(accountTypeFromChild);
     setSelectedAccountCurrency(currencyFromChild);
+    setSelectedAccountVisibility(visibilityFromChild);
     setSearchTerm("");
     setTableNav(true);
   };
@@ -205,6 +208,7 @@ const Accounts = () => {
           account={selectedAccountName}
           accountType={selectedAccountType}
           accountCurrency={selectedAccountCurrency}
+          accountVisibility={selectedAccountVisibility}
           onAccountDelete={handleAccountDelete}
           accountsData={accountsData}
         />
