@@ -76,11 +76,22 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 # Account Serializer.
 class AccountSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Account
         fields = "__all__"
         read_only_fields = ("user", "balance")
         extra_kwargs = {"currency": {"required": True}}
+
+    def validate(self, attrs):
+        account = attrs.get("name")
+
+        if Account.objects.filter(
+            user=self.context["request"].user, name=account
+        ).exists():
+            raise serializers.ValidationError("An account with this name already exists.")
+
+        return attrs
 
 
 # Category Serializer.
@@ -92,6 +103,16 @@ class CategorySerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "type": {"required": False},
         }
+
+    def validate(self, attrs):
+        category = attrs.get("name")
+
+        if Category.objects.filter(
+            user=self.context["request"].user, name=category
+        ).exists():
+            raise serializers.ValidationError("A category with this name already exists.")
+
+        return attrs
 
 
 # Transaction Serializer.

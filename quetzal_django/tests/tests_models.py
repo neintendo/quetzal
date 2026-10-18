@@ -139,6 +139,7 @@ class AccountModelTest(TestCase):
             display_name="Test User",
             main_currency="USD",
         )
+        self.context = {"request": SimpleNamespace(user=self.user)}
 
     def test_create_account(self):
         """Test account creation"""
@@ -184,7 +185,7 @@ class AccountModelTest(TestCase):
             "type": "bank",
             "currency": "USD",
         }
-        serializer = AccountSerializer(data=data)
+        serializer = AccountSerializer(data=data, context=self.context)
         self.assertTrue(serializer.is_valid())
 
     def test_account_balance_default_zero(self):
@@ -205,6 +206,7 @@ class CategoryModelTest(TestCase):
             display_name="Test User",
             main_currency="USD",
         )
+        self.context = {"request": SimpleNamespace(user=self.user)}
 
     def test_create_category(self):
         """Test creating a category"""
@@ -246,7 +248,7 @@ class CategoryModelTest(TestCase):
     def test_category_serializer_valid(self):
         """Test CategorySerializer with valid data"""
         data = {"name": "Test Category", "type": "expense"}
-        serializer = CategorySerializer(data=data)
+        serializer = CategorySerializer(data=data, context=self.context)
         self.assertTrue(serializer.is_valid())
 
 
