@@ -1,12 +1,13 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, 
+# This workflow will do a clean installation of node dependencies, cache/restore them,
 # build the source code and run tests across different versions of node. Then package the backend
 # into a python executable file to be finally bundled with the Electron package.
 
-name: Electron CI
+name: Build & Package
 
 on:
   push:
     branches: [ "main" ]
+  workflow_dispatch:
   # pull_request:
   #   branches: [ "main" ]
 
@@ -17,19 +18,25 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [23.x, 24.x, 25.x]
+        node-version: [26.x]
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-        python-version: [3.13.5]
+        python-version: [3.15.x]
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v6
     - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@v7
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         cache-dependency-path: 'quetzal_react/package-lock.json'
-        
+
+    - name: Use Python 3.15
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.15.x'
+        cache: 'pip'
+
     - name: Install dependencies
       run: npm ci
       working-directory: ./quetzal_react
@@ -44,6 +51,15 @@ jobs:
       run: npm run build --if-present
       working-directory: ./quetzal_react
 
-    - name: Package
-      run: npm run package
+    - name: Make Distributables
+      run: npm run make
       working-directory: ./quetzal_react
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: quetzal
+        path: |
+            quetzal_react/out/
+            dist/
+        if-no-files-found: warn
