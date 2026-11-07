@@ -49,6 +49,7 @@ const AccountsDetail = ({
     return matchesSearch;
   });
 
+  // Sorts data for table headers
   const sortedData = [...filteredData].sort((a, b) => {
     if (!sortHeader.key) return 0;
 
@@ -152,7 +153,7 @@ const AccountsDetail = ({
                 {val.datetime}
               </td>
               <td className={styles.td} style={{ width: 150 }}>
-                {val.transaction_type === "expense" ? -val.amount : val.amount}
+                {val.transaction_type === "expense" ? `-${val.amount}` : val.amount}
               </td>
               <td className={styles.td}>{val.description}</td>
               <td className={styles.td}>{val.category}</td>
