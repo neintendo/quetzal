@@ -31,14 +31,14 @@ module.exports = {
         },
       },
     },
-    {
-      name: '@electron-forge/maker-rpm',
-      config: {
-        options: {
-          icon: 'src/assets/quetzal.png',
-        },
-      },
-    },
+    // {
+    //   name: '@electron-forge/maker-rpm',
+    //   config: {
+    //     options: {
+    //       icon: 'src/assets/quetzal.png',
+    //     },
+    //   },
+    // },
   ],
   plugins: [
     {

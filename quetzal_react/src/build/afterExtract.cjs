@@ -5,7 +5,6 @@ const path = require('path');
 
 module.exports = function (opts) {
   const { buildPath: extractPath, platform } = opts;
-  console.log({ extractPath, platform });
 
   const destination =
     platform === 'darwin'
