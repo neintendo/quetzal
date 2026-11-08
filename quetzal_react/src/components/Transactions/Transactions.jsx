@@ -79,8 +79,13 @@ const Transactions = () => {
   };
 
   const uniqueAccounts = [
-    ...new Set(transactionsData.map((transaction) => transaction.account)),
-  ].sort();
+    ...new Map(
+      transactionsData.map((t) => [
+        `${t.account}|${t.currency}`,
+        { account: t.account, currency: t.currency },
+      ]),
+    ).values(),
+  ].sort((a, b) => a.account.localeCompare(b.account));
 
   const uniqueCategories = [
     ...new Set(transactionsData.map((transaction) => transaction.category)),
@@ -227,6 +232,7 @@ const Transactions = () => {
                         className={styles["filter-clear-button"]}
                         onClick={() => {
                           setAccount("");
+                          setCurrency("");
                         }}
                       >
                         X
@@ -240,11 +246,17 @@ const Transactions = () => {
                     type="text"
                     value={account}
                     onChange={(e) => {
-                      setAccount(e.target.value);
+                      {
+                        const selectedAccount = uniqueAccounts.find(
+                          (item) => item.account === e.target.value,
+                        );
+                        setAccount(e.target.value);
+                        setCurrency(selectedAccount?.currency || "");
+                      }
                     }}
                   >
                     <option value="">- Select Account -</option>
-                    {uniqueAccounts.map((account) => (
+                    {uniqueAccounts.map(({ account }) => (
                       <option key={account} value={account}>
                         {account}
                       </option>
@@ -290,7 +302,7 @@ const Transactions = () => {
                 >
                   <div className={styles["transactions-table-filters-filter"]}>
                     Currency
-                    {currency ? (
+                    {(currency && !account) ? (
                       <div
                         className={styles["filter-clear-button"]}
                         onClick={() => {
@@ -310,6 +322,7 @@ const Transactions = () => {
                     onChange={(e) => {
                       setCurrency(e.target.value);
                     }}
+                    disabled={account}
                   >
                     <option value="">- Select Currency -</option>
                     {uniqueCurrencies.map((currency) => (

@@ -124,6 +124,11 @@
     width: 256px;
 }
 
+.transactions-table-filters-select:disabled {
+    background-color: #bbbbbb;
+    color: #eeeeee;
+}
+
 .transactions-table-filters-date {
     font-size: 11px;
     background-color: #dddddd;
@@ -247,6 +252,11 @@ body[data-theme="dark"] .transactions-table-filter-container {
 
 body[data-theme="dark"] .transactions-table-filters-select {
     background-color: #222222;
+}
+
+body[data-theme="dark"] .transactions-table-filters-select:disabled {
+    background-color: #444444;
+    color: #111111;
 }
 
 body[data-theme="dark"] .transactions-table-filters-date {
