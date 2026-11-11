@@ -19,13 +19,25 @@
     height: 18px;
 }
 
-.tr {
+
+.tr,
+.tr-active,
+.tr-selection {
     border-bottom: 1px solid #bbbbbb;
     scroll-snap-align: start;
     cursor: pointer;
+    transition: background-color 250ms ease;
 }
 .tr:not(:first-child):hover {
     background-color: #cccccc;
+}
+.tr-active {
+    background-color: #cccccc;
+    cursor: default;
+}
+
+.tr-selection {
+    cursor: cell;
 }
 
 /* Dark Theme Overrides */
@@ -35,10 +47,15 @@ body[data-theme="dark"] th {
     box-shadow: 0 -30px 0 #222222;
 }
 
-body[data-theme="dark"] tr {
+body[data-theme="dark"] tr,
+body[data-theme="dark"] tr-active {
     border-bottom: 1px solid #444444;
 }
 
 body[data-theme="dark"] tr:not(:first-child):hover {
+    background-color: #333333;
+}
+
+body[data-theme="dark"] .tr-active {
     background-color: #333333;
 }

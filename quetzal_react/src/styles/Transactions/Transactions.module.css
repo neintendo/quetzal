@@ -44,6 +44,38 @@
     gap: 8px;
 }
 
+.transactions-multiselect-button,
+.transactions-multiselect-button-active,
+.transactions-multiselect-button-delete {
+    display: block;
+    padding: 8px;
+    background-color: #dddddd;
+    border: 1px solid #bbbbbb;
+    white-space: nowrap;
+    transition:
+        background-color 250ms ease,
+        font-size 250ms ease;
+}
+
+.transactions-multiselect-button-delete {
+    align-content: center;
+    background-color: #bbbbbb;
+}
+
+.transactions-multiselect-button-delete:hover {
+    background-color: #cccccc;
+}
+
+.transactions-multiselect-button:hover,
+.transactions-multiselect-button-active:hover {
+    background-color: #cccccc;
+}
+
+.transactions-multiselect-button-active {
+    background-color: #bbbbbb;
+    border: 1px solid #999999;
+}
+
 .transactions-table-title-container,
 .transactions-table-title-container-active,
 .transactions-table-title-container-expanded {
@@ -196,6 +228,9 @@
 }
 
 .transactions-table-title,
+.transactions-multiselect-button,
+.transactions-multiselect-button-active,
+.transactions-multiselect-button-delete,
 .filter-clear-button {
     cursor: pointer;
 }
@@ -242,6 +277,23 @@ body[data-theme="dark"] .transactions-table-title:hover {
 }
 
 body[data-theme="dark"] .transactions-table-title-active {
+    background-color: #444444;
+    border: 1px solid #666666;
+}
+
+body[data-theme="dark"] .transactions-multiselect-button {
+    background-color: #222222;
+    border: 1px solid #444444;
+}
+
+body[data-theme="dark"] .transactions-multiselect-button:hover,
+body[data-theme="dark"] .transactions-multiselect-button-active:hover,
+body[data-theme="dark"] .transactions-multiselect-button-delete:hover {
+    background-color: #333333;
+}
+
+body[data-theme="dark"] .transactions-multiselect-button-active,
+body[data-theme="dark"] .transactions-multiselect-button-delete {
     background-color: #444444;
     border: 1px solid #666666;
 }

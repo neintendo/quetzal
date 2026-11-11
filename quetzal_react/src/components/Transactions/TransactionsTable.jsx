@@ -1,11 +1,34 @@
 import { useState } from "react";
 import styles from "../../styles/Table.module.css";
 
-const TransactionsTable = ({ transactionsData, searchTerm, onRowClick }) => {
+const TransactionsTable = ({
+  transactionsData,
+  searchTerm,
+  onRowClick,
+  multiSelect,
+  selectedTransactionsChild,
+}) => {
+  const [selectedTransactions, setSelectedTransactions] = useState([]);
+  const [prevMultiSelect, setPrevMultiSelect] = useState(multiSelect);
+
+  // Clears selectedTransactions array
+  if (multiSelect !== prevMultiSelect) {
+    setPrevMultiSelect(multiSelect);
+    setSelectedTransactions([]);
+  }
+
   const [sortHeader, setSortHeader] = useState({
     key: "datetime",
     direction: "desc",
   });
+
+  const handleSelection = (idNum) => {
+    setSelectedTransactions((prev) =>
+      prev.includes(idNum)
+        ? prev.filter((id) => id !== idNum)
+        : [...prev, idNum],
+    );
+  };
 
   const currencyFilter = "";
   const requestSort = (key) => {
@@ -43,7 +66,11 @@ const TransactionsTable = ({ transactionsData, searchTerm, onRowClick }) => {
     }
 
     return 0;
+
   });
+
+  // Passes selectedTransactions to function in parent (Transactions.jsx)
+  selectedTransactionsChild(selectedTransactions);
 
   return (
     <table className={styles.table}>
@@ -112,21 +139,27 @@ const TransactionsTable = ({ transactionsData, searchTerm, onRowClick }) => {
         {sortedData.map((val, key) => {
           return (
             <tr
-              className={styles.tr}
-              onClick={() =>
-                onRowClick(
-                  val.id,
-                  val.datetime,
-                  val.description,
-                  val.notes,
-                  val.amount,
-                  val.category,
-                  val.account,
-                  val.currency,
-                  val.transaction_type,
-                  val.linked_transaction,
-                )
+              className={
+                selectedTransactions.includes(val.id)
+                  ? styles["tr-active"]
+                  : multiSelect ? styles["tr-selection"] : styles.tr
               }
+              onClick={() => {
+                multiSelect
+                  ? handleSelection(val.id)
+                  : onRowClick(
+                      val.id,
+                      val.datetime,
+                      val.description,
+                      val.notes,
+                      val.amount,
+                      val.category,
+                      val.account,
+                      val.currency,
+                      val.transaction_type,
+                      val.linked_transaction,
+                    );
+              }}
               key={key}
             >
               <td className={styles.td} style={{ width: 150 }}>

@@ -21,6 +21,9 @@ const Transactions = () => {
   const [transactionType, setTransactionType] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [showFilterView, setShowFilterView] = useState(false);
+  const [showMultiSelect, setShowMultiSelect] = useState(false);
+  const [selectedTransactionsData, setSelectedTransactionsData] = useState([]);
+  const [selectedTransactionsCount, setSelectedTransactionsCount] = useState(0);
   const isFilterActive =
     startDate || endDate || account || category || currency || transactionType;
   const [showTransactionDetailModal, setShowTransactionDetailModal] =
@@ -105,6 +108,39 @@ const Transactions = () => {
     setShowFilterView(!showFilterView);
   };
 
+  const toggleMultiSelect = () => {
+    setShowMultiSelect(!showMultiSelect);
+  };
+
+  const selectedTransactionsParent = (dataFromChild) => {
+    setSelectedTransactionsData(dataFromChild);
+    setSelectedTransactionsCount(dataFromChild.length);
+  };
+
+  const handleSelectionDelete = async () => {
+    const confirmed = window.confirm(
+      selectedTransactionsCount === 1
+        ? `Delete 1 transaction? This action cannot be reversed!`
+        : `Delete ${selectedTransactionsCount} transactions? This action cannot be reversed!`,
+    );
+
+    if (!confirmed) {
+      return;
+    } else {
+      for (const id of new Set(selectedTransactionsData)) {
+        try {
+          await api.delete(`/transactions/${id}/`);
+        } catch (err) {
+          if (err.response?.status !== 404) throw err;
+        }
+      }
+    }
+    setShowMultiSelect(false);
+    setSelectedTransactionsCount(0);
+    setSelectedTransactionsData([]);
+    refresh();
+  };
+
   const handleRowClick = (
     idFromChild,
     datetimeFromChild,
@@ -165,6 +201,27 @@ const Transactions = () => {
           <div className={styles["transactions-table-header"]}>
             <div
               className={
+                showMultiSelect
+                  ? styles["transactions-multiselect-button-active"]
+                  : styles["transactions-multiselect-button"]
+              }
+              onClick={toggleMultiSelect}
+              title="Select multiple transactions"
+            >
+              {"▒"}
+            </div>
+            {selectedTransactionsCount > 0 ? (
+              <div
+                className={styles["transactions-multiselect-button-delete"]}
+                onClick={handleSelectionDelete}
+              >
+                {`del ← ${selectedTransactionsCount}`}
+              </div>
+            ) : (
+              ""
+            )}
+            <div
+              className={
                 showFilterView
                   ? styles["transactions-table-title-container-expanded"]
                   : isFilterActive
@@ -179,7 +236,10 @@ const Transactions = () => {
               >
                 Transactions
               </div>
-              <div className={styles["transactions-table-filter-container"]} style={{overflowX:"scroll"}}>
+              <div
+                className={styles["transactions-table-filter-container"]}
+                style={{ overflowX: "scroll" }}
+              >
                 <div
                   className={styles["transactions-table-textselect-container"]}
                 >
@@ -302,7 +362,7 @@ const Transactions = () => {
                 >
                   <div className={styles["transactions-table-filters-filter"]}>
                     Currency
-                    {(currency && !account) ? (
+                    {currency && !account ? (
                       <div
                         className={styles["filter-clear-button"]}
                         onClick={() => {
@@ -382,12 +442,13 @@ const Transactions = () => {
           </div>
           <div className={styles["sub-table-container"]}>
             <TransactionsTable
-            transactionsData={transactionsData}
-            searchTerm={searchTerm}
-            onRowClick={handleRowClick}
+              transactionsData={transactionsData}
+              searchTerm={searchTerm}
+              onRowClick={handleRowClick}
+              multiSelect={showMultiSelect}
+              selectedTransactionsChild={selectedTransactionsParent}
             />
           </div>
-
         </div>
       </div>
     </>
